@@ -6,6 +6,6 @@ repositories {
 }
 
 dependencies {
-	compile group:'org.jogamp.jogl', name: 'jogl-all', version:'2.3.1' 
-	compile group:'org.jogamp.gluegen', name: 'gluegen-rt', version:'2.3.1'
+	compile group:'org.jogamp.jogl', name: 'jogl-all-main', version:'2.3.1' 
+	compile group:'org.jogamp.gluegen', name: 'gluegen-rt-main', version:'2.3.1'
 }
