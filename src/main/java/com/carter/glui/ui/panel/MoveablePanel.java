@@ -1,12 +1,14 @@
 package com.carter.glui.ui.panel;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.geom.Point2D;
 
 import com.carter.glui.DrawContext;
 import com.carter.glui.ui.component.Resizable;
 import com.carter.glui.ui.component.ResizeComponent;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.util.awt.TextRenderer;
 
 public class MoveablePanel extends AbstractPanel implements Resizable
 {
@@ -42,7 +44,6 @@ public class MoveablePanel extends AbstractPanel implements Resizable
 	{
 		if(pressed)
 		{
-			System.out.println("Updating");
 			x = (int)glPoint.x - xOffset;
 			y = (int)glPoint.y - yOffset;
 		}

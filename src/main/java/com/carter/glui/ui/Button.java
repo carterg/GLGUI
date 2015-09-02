@@ -2,6 +2,7 @@ package com.carter.glui.ui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
@@ -11,6 +12,7 @@ import com.carter.glui.DrawContext;
 import com.carter.glui.action.ButtonAction;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.awt.TextRenderer;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 /**
  * A generic Button UI component.  
@@ -19,20 +21,37 @@ import com.jogamp.opengl.util.awt.TextRenderer;
  */
 public class Button extends VisibleNode 
 {
+	private static final int DEFAULT_FONT_SIZE = 24;
 	private int width;
 	private int height;
 	private String text;
+	private GLUT glut = new GLUT();
+	
 	protected ButtonAction action;
+	protected TextRenderer textRenderer;
+	protected int fontSize;
 	
 	public Button(int x, int y, int width, int height, String text)
 	{
 		super(x, y);
+		this.textRenderer = new TextRenderer(new Font("Dialog", Font.PLAIN, DEFAULT_FONT_SIZE));
 		this.width = width;
 		this.height = height;
 		this.text = text;
 		this.action = new ButtonAction() {};
 	}
 
+	public void setFontSize(int fontSize)
+	{
+		//this.fontSize = fontSize;
+		//this.textRenderer = new TextRenderer(new Font("Veranda", Font.BOLD, fontSize));
+	}
+	
+	public int getFontSize()
+	{
+		return fontSize;
+	}
+	
 	@Override
 	public void doDraw(DrawContext dc) 
 	{
@@ -40,45 +59,31 @@ public class Button extends VisibleNode
 		
 		if(dc.isPickingMode())
 		{
+			Point drawPoint = getDrawCoordinates();
 			Color uniqueColor = dc.getUniquePickingColor();
 			gl.glColor3ub((byte)uniqueColor.getRed(), (byte)uniqueColor.getGreen(), (byte)uniqueColor.getBlue());
 			dc.registerPickableObject(uniqueColor.getRGB(), this);
+			dc.drawQuad(drawPoint.x, drawPoint.y, width, height);
 		}
 		else
 		{
-			gl.glColor4f(0.4f, 0.2f, 0.8f, 0.5f);
-		}
-		
-		
-		// draw background
-		dc.drawQuad(x, y, width, height);
-		
-		if(pressed)
-		{
-			DrawHelper.drawLoweredBox(dc, x, y, width, height);
-		}
-		else if(hovered)
-		{
-			DrawHelper.drawHoveredBox(dc, x, y, width, height);
-		}
-		else
-		{
-			DrawHelper.drawRaisedBox(dc, x, y, width, height);
+			drawBorder(gl, 126.0f/255.0f,180.0f/255.0f, 235.0f/255.0f);
+			drawText(dc);
 		}
 	}
 	
 	private void drawText(DrawContext dc)
 	{
-		TextRenderer textRenderer = new TextRenderer(new Font("Veranda", Font.BOLD, 12));
+		Point drawPoint = getDrawCoordinates();
 		textRenderer.beginRendering(dc.getSurfaceWidth(), dc.getSurfaceHeight());
-		textRenderer.setColor(Color.YELLOW);
+		textRenderer.setColor(Color.RED);
 		textRenderer.setSmoothing(true);
 		
-		Rectangle2D bounds = textRenderer.getBounds(text);
-		int fillerw = 200 - (int)bounds.getWidth();
-		int fillerh = 50 - (int)bounds.getHeight();
+		double textWidth = textRenderer.getBounds(text).getWidth();
 		
-		textRenderer.draw(text, 10 + fillerw/2, 10 + fillerh/2);
+		double xLeft = width - textWidth; 
+		
+		textRenderer.draw(text, (int) (drawPoint.x + xLeft/2), drawPoint.y);
 		textRenderer.endRendering();
 	}
 	
@@ -127,5 +132,36 @@ public class Button extends VisibleNode
 		{
 			action.releasedButtonAction();
 		}
+	}
+	
+	private Point getDrawCoordinates()
+	{
+		int drawX = x;
+		int drawY = y;
+		
+		if(parent instanceof VisibleNode)
+		{
+			VisibleNode p = (VisibleNode)parent;
+			drawX = p.x + x;
+			drawY = p.y + y;
+		}
+		
+		return new Point(drawX, drawY);
+	}
+	private void drawBorder(GL2 gl, float r, float g, float b)
+	{
+		Point drawPoint = getDrawCoordinates();
+		
+		gl.glColor3f(r, g, b);
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		// bottom left
+		gl.glVertex2d(drawPoint.x - 1, drawPoint.y - 1);
+		// top left
+		gl.glVertex2d(drawPoint.x-1, drawPoint.y + height + 1);
+		//top right
+		gl.glVertex2d(drawPoint.x + width + 1, drawPoint.y + height + 1);
+		// bottom right
+		gl.glVertex2d(drawPoint.x + width + 1, drawPoint.y - 1);
+		gl.glEnd();
 	}
 }

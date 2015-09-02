@@ -48,15 +48,15 @@ public abstract class AbstractPanel extends VisibleNode
 	{
 		GL2 gl = dc.getGL2();
 		
-		// The viewport should be set to the panel since that is our new drawing surface
-		Rectangle viewport = computeViewport();
-		dc.setViewport(viewport);
-		//  Reset the perspective matrix to the full size of the panel
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadIdentity();
-		gl.glOrtho(0, viewport.width, 0, viewport.height, -1, 1);
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
+//		// The viewport should be set to the panel since that is our new drawing surface
+//		Rectangle viewport = computeViewport();
+//		dc.setViewport(viewport);
+////		//  Reset the perspective matrix to the full size of the panel
+//		gl.glMatrixMode(GL2.GL_PROJECTION);
+//		gl.glLoadIdentity();
+//		gl.glOrtho(0, viewport.width, 0, viewport.height, -1, 1);
+//		gl.glMatrixMode(GL2.GL_MODELVIEW);
+//		gl.glLoadIdentity();
 	}
 	@Override
 	public void draw(DrawContext dc)
@@ -77,6 +77,7 @@ public abstract class AbstractPanel extends VisibleNode
 	{
 		if(parent == null)
 		{
+			System.out.println("Parent null");
 			return new Rectangle(x, y, width, height);
 		}
 		else

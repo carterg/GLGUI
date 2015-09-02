@@ -30,16 +30,17 @@ public class Test
 		
 		SimpleScene scene = new SimpleScene();
 
-		Button button = new Button(20, 20, 40, 20, "test");
+		Button button = new Button(20, 20, 50, 20, "Ac");
+		button.setFontSize(60);
 		MoveablePanel panel = new MoveablePanel(10, 10, 300, 300);
 		panel.setName("Yellow Panel");
 		panel.setBackground(Color.YELLOW);
 		panel.addChild(button);
-		//Label label = new Label("Test Label", 100, 100);
-		//panel.addChild(label);
-		//CheckBox cb = new CheckBox(250, 100);
-		ComboBox cb = new ComboBox(250, 100);
-		panel.addChild(cb);
+//		//Label label = new Label("Test Label", 100, 100);
+//		//panel.addChild(label);
+//		//CheckBox cb = new CheckBox(250, 100);
+//		//ComboBox cb = new ComboBox(250, 100);
+//		//panel.addChild(cb);
 		scene.addChild(panel);
 		
 		GLProfile glp = GLProfile.getDefault();
