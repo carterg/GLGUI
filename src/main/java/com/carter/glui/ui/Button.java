@@ -21,7 +21,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
  */
 public class Button extends VisibleNode 
 {
-	private static final int DEFAULT_FONT_SIZE = 24;
+	private static final int DEFAULT_FONT_SIZE = 20;
 	private int width;
 	private int height;
 	private String text;
@@ -30,6 +30,8 @@ public class Button extends VisibleNode
 	protected ButtonAction action;
 	protected TextRenderer textRenderer;
 	protected int fontSize;
+	
+	protected String cachedDrawText = null;
 	
 	public Button(int x, int y, int width, int height, String text)
 	{
@@ -79,11 +81,33 @@ public class Button extends VisibleNode
 		textRenderer.setColor(Color.RED);
 		textRenderer.setSmoothing(true);
 		
-		double textWidth = textRenderer.getBounds(text).getWidth();
-		
-		double xLeft = width - textWidth; 
-		
-		textRenderer.draw(text, (int) (drawPoint.x + xLeft/2), drawPoint.y);
+		if(cachedDrawText == null)
+		{
+			double textWidth = textRenderer.getBounds(text).getWidth();
+			if(textWidth > width)
+			{
+				// we need to shorten the text
+				String drawText = text.substring(0, text.length()-1);
+				
+				while(textRenderer.getBounds(drawText).getWidth() > width)
+				{
+					drawText = drawText.substring(0, drawText.length() - 1);
+				}
+				cachedDrawText = drawText;
+			}
+			else
+			{
+				cachedDrawText = text;
+			}
+		}
+
+		Rectangle2D bounds = textRenderer.getBounds(cachedDrawText);
+		double textWidth = bounds.getWidth();
+		double textHeight = bounds.getHeight();
+		double xLeft = width - textWidth;
+		double yLeft = height - textHeight;
+			
+		textRenderer.draw(cachedDrawText, (int) (drawPoint.x + xLeft/2), (int) (drawPoint.y + yLeft/2));
 		textRenderer.endRendering();
 	}
 	

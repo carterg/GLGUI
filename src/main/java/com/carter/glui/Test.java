@@ -30,7 +30,7 @@ public class Test
 		
 		SimpleScene scene = new SimpleScene();
 
-		Button button = new Button(20, 20, 50, 20, "Ac");
+		Button button = new Button(20, 20, 50, 20, "123456");
 		button.setFontSize(60);
 		MoveablePanel panel = new MoveablePanel(10, 10, 300, 300);
 		panel.setName("Yellow Panel");
